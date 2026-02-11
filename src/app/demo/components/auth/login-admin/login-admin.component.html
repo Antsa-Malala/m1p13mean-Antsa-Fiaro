@@ -3,11 +3,11 @@
         <div class="col-12 mt-5 xl:mt-0 text-center">
             <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.png" alt="Tsenantsika logo" class="mb-5" style="width:81px; height:81px;">                
         </div>
-        <div class="col-12 xl:col-6" style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, #53C2BE 10%, rgba(168, 213, 186, 0) 30%);">
+        <div class="col-12 xl:col-6" style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
             <div class="h-full w-full m-0 py-7 px-4" style="border-radius:53px; background: linear-gradient(180deg, var(--surface-50) 38.9%, var(--surface-0));">
                 <div class="text-center mb-5">
-                    <img src="assets/demo/images/login/utilisateur.png" alt="Image" height="50" class="mb-3">
-                    <div class="text-900 text-3xl font-medium mb-3">Welcome home !</div>
+                    <img src="assets/demo/images/login/administrateur.png" alt="Image" height="50" class="mb-3">
+                    <div class="text-900 text-3xl font-medium mb-3">Welcome to the admin area !</div>
                     <span class="text-600 font-medium">Sign in to continue</span>
                 </div>
 
@@ -24,10 +24,9 @@
                             <label for="rememberme1">Remember me</label>
                         </div>
                     </div>
-                    <button pButton pRipple label="Sign In" class="w-full p-3 text-xl" style="background: #04AAE0; color: white; border: none;"></button>
-
+                    <button pButton pRipple label="Sign In" class="w-full p-3 text-xl"></button>
                     <div class="text-center mt-5">
-                        Don't have an account ? <a class="underline cursor-pointer" href="/#/signup"><span class="text-blue-600 font-medium">Sign up</span></a>
+                        Don't have an account ? <a class="underline cursor-pointer" href="/#/signupAdmin"><span class="text-blue-600 font-medium">Sign up</span></a>
                     </div>
                 </div>
             </div>

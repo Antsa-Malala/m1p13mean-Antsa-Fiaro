@@ -16,13 +16,15 @@
                 </div>
 
                 <div class="w-full md:w-10 mx-auto">
-                    <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
-                    <input id="email1" type="text" placeholder="Email address" pInputText class="w-full mb-3" style="padding:1rem;">
+                    <form (ngSubmit)="onSignup()">
+                        <label for="email1" class="block text-900 text-xl font-medium mb-2">Name</label>
+                        <input id="email1" type="text" [(ngModel)]="name"  name="name" placeholder="Your name" pInputText class="w-full mb-3" style="padding:1rem;">
 
-                    <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
-                    <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true" styleClass="w-full mb-5"></p-password>
+                        <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
+                        <p-password id="password1" [(ngModel)]="password" name="password" placeholder="Password" [toggleMask]="true" styleClass="w-full mb-5"></p-password>
 
-                    <button pButton pRipple label="Sign Up" class="w-full p-3 text-xl"></button>
+                        <button pButton pRipple type="submit" label="Sign Up" class="w-full p-3 text-xl"></button>
+                    </form>
                     <div class="text-center mt-5">
                         Already have an account ? <a class="underline cursor-pointer" href="/#/loginAdmin"><span class="text-blue-600 font-medium">Sign in</span></a>
                     </div>

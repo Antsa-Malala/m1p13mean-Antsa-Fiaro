@@ -1,34 +1,34 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-import { AdminService } from 'src/app/services/admin.service';
+import { ShopService } from 'src/app/services/shop.service';
 import { switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-signup-admin',
-  templateUrl: './signup-admin.component.html',
-  styleUrls: ['./signup-admin.component.scss']
+  selector: 'app-signup-shop',
+  templateUrl: './signup-shop.component.html',
+  styleUrls: ['./signup-shop.component.scss']
 })
-export class SignupAdminComponent {
+export class SignupShopComponent {
 
   valCheck: string[] = ['remember'];
 
   name: string = '';
   password: string = '';
-     
-  constructor(public layoutService: LayoutService, private adminService: AdminService, private router: Router) { }
-   
+  
+  constructor(public layoutService: LayoutService, private shopService: ShopService, private router: Router) { }
+
   onSignup() {
 
-    const adminData = {
+    const shopData = {
       name: this.name,
       password: this.password
     };
 
-    this.adminService.signup(adminData).pipe(
+    this.shopService.signup(shopData).pipe(
 
       switchMap(() => {
-        return this.adminService.login({
+        return this.shopService.login({
           name: this.name,
           password: this.password
         });
@@ -46,6 +46,7 @@ export class SignupAdminComponent {
         console.error('Erreur inscription/login', err);
         alert('Erreur lors de l’inscription');
       }
+
     });
   }
 }

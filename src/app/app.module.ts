@@ -27,6 +27,8 @@ import { ToastModule } from 'primeng/toast';
 import { SliderModule } from 'primeng/slider';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
     declarations: [
@@ -47,12 +49,14 @@ import { FormsModule } from '@angular/forms';
         DropdownModule,
         ProgressBarModule,
         ToastModule,
-        FormsModule
+        FormsModule,
+        HttpClientModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService
+        PhotoService, ProductService 
     ],
     bootstrap: [AppComponent]
 })

@@ -4,11 +4,28 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    selector: 'app-login-admin',
+    templateUrl: './login-admin.component.html',
+    styles: [`
+        :host ::ng-deep .p-password input {
+            width: 100%;
+            padding:1rem;
+        }
+
+        :host ::ng-deep .pi-eye{
+            transform:scale(1.6);
+            margin-right: 1rem;
+            color: var(--primary-color) !important;
+        }
+
+        :host ::ng-deep .pi-eye-slash{
+            transform:scale(1.6);
+            margin-right: 1rem;
+            color: var(--primary-color) !important;
+        }
+    `]
 })
-export class LoginComponent {
+export class LoginAdminComponent {
 
     valCheck: string[] = ['remember'];
 
@@ -21,7 +38,7 @@ export class LoginComponent {
         const credentials = {
             email: this.email,
             password: this.password,
-            role : "CUSTOMER"
+            role : "ADMIN"
         };
 
         this.userService.login(credentials).subscribe({

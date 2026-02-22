@@ -7,10 +7,11 @@ import { MydashboardComponent } from './demo/components/mydashboard/mydashboard.
 @NgModule({
     imports: [
         RouterModule.forRoot([
+            { path: '', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
             {
                 path: '', component: AppLayoutComponent,
                 children: [
-                    { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+                    { path: 'dashboard', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UikitModule) },
                     { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
                     { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
@@ -20,7 +21,6 @@ import { MydashboardComponent } from './demo/components/mydashboard/mydashboard.
                     { path: 'mydashboard', component: MydashboardComponent },
                 ],
             },
-            { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'pages/notfound', component: NotfoundComponent },
             { path: '**', redirectTo: 'pages/notfound' },

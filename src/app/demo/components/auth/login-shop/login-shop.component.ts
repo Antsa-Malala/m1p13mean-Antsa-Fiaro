@@ -4,11 +4,11 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    selector: 'app-login-shop',
+    templateUrl: './login-shop.component.html',
+    styleUrls: ['./login-shop.component.scss']
 })
-export class LoginComponent {
+export class LoginShopComponent {
 
     valCheck: string[] = ['remember'];
 
@@ -21,7 +21,7 @@ export class LoginComponent {
         const credentials = {
             email: this.email,
             password: this.password,
-            role : "CUSTOMER"
+            role : "SHOP"
         };
 
         this.userService.login(credentials).subscribe({

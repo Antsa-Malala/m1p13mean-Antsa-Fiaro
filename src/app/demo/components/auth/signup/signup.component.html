@@ -13,26 +13,46 @@
                     <img src="assets/demo/images/login/utilisateur.png" alt="Image" height="50" class="mb-3">
                     <div class="text-900 text-3xl font-medium mb-3">Be a member of your favorite mall !</div>
                     <span class="text-600 font-medium">Sign up to continue</span>
+                    <div *ngIf="errorMessage" class="text-red-600 mt-4">
+                        {{ errorMessage }}
+                    </div>
                 </div>
 
                 <div class="w-full md:w-10 mx-auto">
-                    <form (ngSubmit)="onSignup()">
+                    <form (ngSubmit)="onSignup()" #signupForm="ngForm" novalidate>
                         <label for="name" class="block text-900 text-xl font-medium mb-2">Name</label>
-                        <input id="email1" type="text" [(ngModel)]="name"  name="name" placeholder="Your name" pInputText class="w-full mb-3" style="padding:1rem;">
+                        <input id="email1" type="text" [(ngModel)]="name"  name="name" placeholder="Your name" pInputText class="w-full mb-3" style="padding:1rem;" required #nameField="ngModel">
+
+                        <div *ngIf="nameField.invalid && nameField.touched" class="text-red-600 text-sm">
+                            <div *ngIf="nameField.errors?.['required']">Name is required</div>
+                        </div>
 
                         <label for="address" class="block text-900 text-xl font-medium mb-2">Address</label>
-                        <input id="email1" type="text" [(ngModel)]="address"  name="address" placeholder="Your exact address" pInputText class="w-full mb-3" style="padding:1rem;">
+                        <input id="email1" type="text" [(ngModel)]="address"  name="address" placeholder="Your exact address" pInputText class="w-full mb-3" style="padding:1rem;" required #addressField="ngModel">
+
+                        <div *ngIf="addressField.invalid && addressField.touched" class="text-red-600 text-sm">
+                            <div *ngIf="addressField.errors?.['required']">Address is required</div>
+                        </div>
 
                         <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
-                        <input id="email1" type="email" [(ngModel)]="email"  name="email" placeholder="Email address" pInputText class="w-full mb-3" style="padding:1rem;">
+                        <input id="email1" type="email" [(ngModel)]="email"  name="email" placeholder="Your email address" pInputText class="w-full mb-3" style="padding:1rem;" required email #emailField="ngModel">
+
+                        <div *ngIf="emailField.invalid && emailField.touched" class="text-red-600 text-sm">
+                            <div *ngIf="emailField.errors?.['required']">Email is required</div>
+                            <div *ngIf="emailField.errors?.['email']">Enter a valid email</div>
+                        </div>
 
                         <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
-                        <p-password id="password1" [(ngModel)]="password" name="password" placeholder="Password" [toggleMask]="true" styleClass="w-full mb-5"></p-password>
+                        <p-password id="password1" [(ngModel)]="password" name="password" placeholder="Your password" [toggleMask]="true" styleClass="w-full mb-5" required #passwordField="ngModel"></p-password>
 
-                        <button pButton pRipple label="Sign Up" type="submit" class="w-full p-3 text-xl" style="background: #04AAE0; color: white; border: none;"></button>
+                        <div *ngIf="passwordField.invalid && passwordField.touched" class="text-red-600 text-sm">
+                            <div *ngIf="passwordField.errors?.['required']">Password is required</div>
+                        </div>
+
+                        <button pButton pRipple label="Sign Up" type="submit" class="w-full p-3 text-xl" style="background: #04AAE0; color: white; border: none;" [disabled]="signupForm.invalid"></button>
                     </form>
                     <div class="text-center mt-5">
-                        Already have an account ? <a class="underline cursor-pointer" href="/#/"><span class="text-blue-600 font-medium">Sign in</span></a>
+                        Already have an account ? <a class="underline cursor-pointer" href="/auth/login"><span class="text-blue-600 font-medium">Sign in</span></a>
                     </div>
                 </div>
             </div>

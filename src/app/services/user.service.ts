@@ -6,30 +6,30 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ShopService {
+export class UserService {
 
-  private apiUrl = environment.apiUrl + '/api/shops';
+  private apiUrl = environment.apiUrl + '/api';
 
   constructor(private http: HttpClient) {}
 
-  getShops(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getUsersByRole(role: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/${role}`);
   }
 
-  getShop(id: string): Observable<any> {
+  getUser(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  updateShop(id: string, shopData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, shopData);
+  updateUser(id: string, userData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, userData);
   }
 
-  deleteShop(id: string): Observable<any> {
+  deleteUser(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  signup(shopData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, shopData);
+  signup(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/signup`, userData);
   }
 
   login(credentials: any): Observable<any> {

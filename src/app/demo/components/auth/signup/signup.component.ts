@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-import { CustomerService } from 'src/app/services/customer.service';
+import { UserService } from 'src/app/services/user.service';
 import { switchMap } from 'rxjs';
 
 @Component({
@@ -14,25 +14,29 @@ export class SignupComponent {
     valCheck: string[] = ['remember'];
 
     name: string = '';
-    mail: string = '';
+    address: string = '';
+    email: string = '';
     password: string = '';
         
-    constructor(public layoutService: LayoutService, private customerService: CustomerService, private router: Router) { }
+    constructor(public layoutService: LayoutService, private userService: UserService, private router: Router) { }
       
     onSignup() {
   
-      const customerData = {
+      const userData = {
         name: this.name,
-        mail: this.mail,
-        password: this.password
+        address : this.address,
+        email: this.email,
+        password: this.password,
+        role : 'CUSTOMER'
       };
   
-      this.customerService.signup(customerData).pipe(
+      this.userService.signup(userData).pipe(
   
         switchMap(() => {
-          return this.customerService.login({
-            mail: this.mail,
-            password: this.password
+          return this.userService.login({
+            email: this.email,
+            password: this.password,
+            role : 'CUSTOMER'
           });
         })
   
@@ -40,6 +44,7 @@ export class SignupComponent {
   
         next: (res: any) => {
           localStorage.setItem('token', res.token);
+          localStorage.setItem('connectedUser', JSON.stringify(res.user));
   
           this.router.navigate(['/error']);
         },

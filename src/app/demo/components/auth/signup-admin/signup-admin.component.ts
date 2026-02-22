@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-import { AdminService } from 'src/app/services/admin.service';
+import { UserService } from 'src/app/services/user.service';
 import { switchMap } from 'rxjs';
 
 @Component({
@@ -14,23 +14,27 @@ export class SignupAdminComponent {
   valCheck: string[] = ['remember'];
 
   name: string = '';
+  email: string = '';
   password: string = '';
      
-  constructor(public layoutService: LayoutService, private adminService: AdminService, private router: Router) { }
+  constructor(public layoutService: LayoutService, private userService: UserService, private router: Router) { }
    
   onSignup() {
 
-    const adminData = {
+    const userData = {
       name: this.name,
-      password: this.password
+      email: this.email,
+      password: this.password,
+      role : 'ADMIN'
     };
 
-    this.adminService.signup(adminData).pipe(
+    this.userService.signup(userData).pipe(
 
       switchMap(() => {
-        return this.adminService.login({
-          name: this.name,
-          password: this.password
+        return this.userService.login({
+          email: this.email,
+          password: this.password,
+          role : 'ADMIN'
         });
       })
 
@@ -38,6 +42,7 @@ export class SignupAdminComponent {
 
       next: (res: any) => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('connectedUser', JSON.stringify(res.user));
 
         this.router.navigate(['/error']);
       },

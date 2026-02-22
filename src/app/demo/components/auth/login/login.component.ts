@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-import { CustomerService } from 'src/app/services/customer.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
     selector: 'app-login',
@@ -12,21 +12,22 @@ export class LoginComponent {
 
     valCheck: string[] = ['remember'];
 
-    name: string = '';
-    mail: string = '';
+    email: string = '';
     password: string = '';
     
-    constructor(public layoutService: LayoutService, private customerService: CustomerService, private router: Router) { }
+    constructor(public layoutService: LayoutService, private userService: UserService, private router: Router) { }
     
     onLogin() {
         const credentials = {
-            mail: this.mail,
-            password: this.password
+            email: this.email,
+            password: this.password,
+            role : "CUSTOMER"
         };
 
-        this.customerService.login(credentials).subscribe({
+        this.userService.login(credentials).subscribe({
         next: (res: any) => {
             localStorage.setItem('token', res.token);
+            localStorage.setItem('connectedUser', JSON.stringify(res.customer));
 
             this.router.navigate(['/error']);
         },

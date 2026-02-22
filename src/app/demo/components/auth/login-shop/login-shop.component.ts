@@ -14,6 +14,7 @@ export class LoginShopComponent {
 
     email: string = '';
     password: string = '';
+    errorMessage: string = '';
     
     constructor(public layoutService: LayoutService, private userService: UserService, private router: Router) { }
     
@@ -24,16 +25,18 @@ export class LoginShopComponent {
             role : "SHOP"
         };
 
+        this.errorMessage = '';
+
         this.userService.login(credentials).subscribe({
         next: (res: any) => {
             localStorage.setItem('token', res.token);
-            localStorage.setItem('connectedUser', JSON.stringify(res.customer));
+            localStorage.setItem('connectedUser', JSON.stringify(res.user));
 
-            this.router.navigate(['/error']);
+            this.router.navigate(['/uikit/overlay']);
         },
         error: (err) => {
             console.error('Erreur login', err);
-            alert('Email ou mot de passe incorrect');
+            this.errorMessage = 'Email ou mot de passe incorrect';
         }
         });
     }

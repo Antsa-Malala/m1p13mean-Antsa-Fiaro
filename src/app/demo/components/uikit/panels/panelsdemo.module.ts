@@ -15,6 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DividerModule } from 'primeng/divider';
 import { SplitterModule } from 'primeng/splitter';
 import { PanelModule } from 'primeng/panel';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { PanelModule } from 'primeng/panel';
         InputTextModule,
         DividerModule,
         SplitterModule,
-        PanelModule
+        PanelModule,
+        ImageModule
     ],
     declarations: [PanelsDemoComponent]
 })

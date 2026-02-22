@@ -78,7 +78,7 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Error',
                                 icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/error']
+                                routerLink: ['/auth/error']
                             },
                             {
                                 label: 'Access Denied',

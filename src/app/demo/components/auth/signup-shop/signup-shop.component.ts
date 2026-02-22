@@ -16,6 +16,7 @@ export class SignupShopComponent {
   name: string = '';
   email: string = '';
   password: string = '';
+  errorMessage: string = '';
   
   constructor(public layoutService: LayoutService, private userService: UserService, private router: Router) { }
 
@@ -27,6 +28,8 @@ export class SignupShopComponent {
       password: this.password,
       role : 'SHOP'
     };
+
+    this.errorMessage = '';
 
     this.userService.signup(userData).pipe(
 
@@ -45,12 +48,12 @@ export class SignupShopComponent {
         localStorage.setItem('token', res.token);
         localStorage.setItem('connectedUser', JSON.stringify(res.user));
 
-        this.router.navigate(['/error']);
+        this.router.navigate(['/uikit/overlay']);
       },
 
       error: (err) => {
         console.error('Erreur inscription/login', err);
-        alert('Erreur lors de l’inscription');
+        this.errorMessage = "Erreur lors de l'inscription";
       }
 
     });

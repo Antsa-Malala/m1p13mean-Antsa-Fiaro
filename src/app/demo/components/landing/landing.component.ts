@@ -28,7 +28,7 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
             #hero > img {
                 position: absolute;
                 transform:scale(1.2);
-                top:15%;
+                top:8%;
             }
 
         #hero > div > p {

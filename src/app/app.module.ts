@@ -5,6 +5,7 @@ import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { ProductService } from './demo/service/product.service';
 import { BoxService } from './demo/service/box.service';
+import { CategoryService } from './demo/service/category.service';
 import { CountryService } from './demo/service/country.service';
 import { CustomerService } from './demo/service/customer.service';
 import { EventService } from './demo/service/event.service';
@@ -29,6 +30,7 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
     declarations: [
@@ -55,7 +57,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService , BoxService
+        PhotoService, ProductService , BoxService, CategoryService, MessageService
     ],
     bootstrap: [AppComponent]
 })

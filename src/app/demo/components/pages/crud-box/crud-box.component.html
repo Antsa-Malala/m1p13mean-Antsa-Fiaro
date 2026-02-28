@@ -6,7 +6,6 @@
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-secondary mr-2 mt-2" (click)="openNew()"></button>
-                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger mr-2 mt-2" (click)="deleteSelectedBoxes()" [disabled]="!selectedBoxes || !selectedBoxes.length"></button>
                     </div>
                 </ng-template>
             </p-toolbar>
@@ -23,9 +22,6 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
                         <th pSortableColumn="floor">Floor <p-sortIcon field="floor"></p-sortIcon></th>
                         <th pSortableColumn="number">Number <p-sortIcon field="number"></p-sortIcon></th>
                         <th>Image</th>
@@ -36,9 +32,6 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-box>
                     <tr>
-                        <td>
-                            <p-tableCheckbox [value]="box"></p-tableCheckbox>
-                        </td>
                         <td style="width:20; min-width:10rem;"><span class="p-column-title">Floor</span>
                             {{box.floor}}
                         </td>

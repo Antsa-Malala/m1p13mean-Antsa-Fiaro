@@ -47,7 +47,6 @@ export class SignupComponent {
   
         next: (res: any) => {
           localStorage.setItem('token', res.token);
-          localStorage.setItem('connectedUser', JSON.stringify(res.user));
   
           this.router.navigate(['/uikit/overlay']);
         },

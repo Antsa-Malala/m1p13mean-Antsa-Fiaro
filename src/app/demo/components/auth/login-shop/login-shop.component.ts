@@ -12,8 +12,8 @@ export class LoginShopComponent {
 
     valCheck: string[] = ['remember'];
 
-    email: string = '';
-    password: string = '';
+    email: string = 'extra@pizza.com';
+    password: string = 'ExtraPizza1';
     errorMessage: string = '';
     
     constructor(public layoutService: LayoutService, private userService: UserService, private router: Router) { }
@@ -30,7 +30,6 @@ export class LoginShopComponent {
         this.userService.login(credentials).subscribe({
         next: (res: any) => {
             localStorage.setItem('token', res.token);
-            localStorage.setItem('connectedUser', JSON.stringify(res.user));
 
             this.router.navigate(['/uikit/overlay']);
         },

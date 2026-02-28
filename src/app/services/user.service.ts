@@ -24,13 +24,10 @@ export class UserService {
             this.getMyBox(user._id).subscribe({
               next: (data: Box) => {
                 user.box = data;
-                console.log('Box récupérée:', user.box);
               },
               error: (err) => console.error(err)
             });
           }
-
-          console.log(user);
           this.userSubject.next(user);
         },
         error: (err) => {

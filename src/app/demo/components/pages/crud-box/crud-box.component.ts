@@ -84,26 +84,36 @@ export class CrudBoxComponent implements OnInit {
     confirmDeleteSelected() {
         this.deleteBoxesDialog = false;
         this.boxes = this.boxes.filter(val => !this.selectedBoxes.includes(val));
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Boxs Deleted', life: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Boxes Deleted', life: 3000 });
         this.selectedBoxes = [];
     }
 
     confirmDelete() {
         this.deleteBoxDialog = false;
 
-        if (this.box._id) {
-            this.boxService.deleteBox(this.box._id).subscribe(() => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Box Deleted',
-                    life: 3000
+        try{
+            if (this.box._id) {
+                this.boxService.deleteBox(this.box._id).subscribe(() => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Successful',
+                        detail: 'Box Deleted',
+                        life: 3000
+                    });
+                    this.loadBoxes();
                 });
-                this.loadBoxes();
+            }
+    
+            this.box = {};
+        } catch (err: any) {
+            console.error(err);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: err?.message || 'Unexpected error occurred',
+                life: 5000
             });
         }
-
-        this.box = {};
     }
 
     hideDialog() {
@@ -113,52 +123,83 @@ export class CrudBoxComponent implements OnInit {
         this.box = {};
     }
 
-    saveBox() {
+    saveBox(): void {
         this.submitted = true;
 
         if (!this.box.floor || !this.box.number) {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('floor', this.box.floor.toString());
-        formData.append('number', this.box.number.toString());
-        formData.append('status', this.box.status || 'AVAILABLE');
-        
-        if (this.box.shop?._id) {
-            formData.append('shop', this.box.shop._id);
-        }
+        try {
+            const formData = new FormData();
+            formData.append('floor', this.box.floor.toString());
+            formData.append('number', this.box.number.toString());
+            formData.append('status', this.box.status || 'AVAILABLE');
 
-        if (this.selectedFile) {
-            formData.append('image', this.selectedFile);
-        }
+            if (this.box.shop?._id) {
+                formData.append('shop', this.box.shop._id);
+            }
 
+            if (this.selectedFile) {
+                formData.append('image', this.selectedFile);
+            }
 
-        if (this.box._id) {
-            this.boxService.updateBox(this.box._id, formData).subscribe(() => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Box Updated',
-                    life: 3000
+            if (this.box._id) {
+                this.boxService.updateBox(this.box._id, formData).subscribe({
+                    next: () => {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Successful',
+                            detail: 'Box Updated',
+                            life: 3000
+                        });
+                        this.loadBoxes();
+                        this.loadShops();
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: err?.error?.message || 'Something went wrong',
+                            life: 5000
+                        });
+                    }
                 });
-                this.loadBoxes();
-                this.loadShops();
-            });
-        } else {
-            this.boxService.createBox(formData).subscribe(() => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Box Created',
-                    life: 3000
+            } else {
+                this.boxService.createBox(formData).subscribe({
+                    next: () => {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Successful',
+                            detail: 'Box Created',
+                            life: 3000
+                        });
+                        this.loadBoxes();
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: err?.error?.message || 'Something went wrong',
+                            life: 5000
+                        });
+                    }
                 });
-                this.loadBoxes();
+            }
+
+            this.boxDialog = false;
+            this.box = {};
+        } catch (err: any) {
+            console.error(err);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: err?.message || 'Unexpected error occurred',
+                life: 5000
             });
         }
-
-        this.boxDialog = false;
-        this.box = {};
     }
 
     findIndexById(id: string): number {
@@ -179,15 +220,34 @@ export class CrudBoxComponent implements OnInit {
 
     onFileSelect(event: any) {
         this.selectedFile = event.target.files[0];
-        console.log("SELECTED FILE:", this.selectedFile);
     }
 
     loadBoxes() {
-        this.boxService.getBoxes()
+        try{
+            this.boxService.getBoxes()
             .then((data: Box[]) => this.boxes = data);
+        } catch (err: any) {
+            console.error(err);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: err?.message || 'Unexpected error occurred',
+                life: 5000
+            });
+        }
     }
 
     async loadShops() {
-        this.shops = await this.userService.availableShops();
+        try{
+            this.shops = await this.userService.availableShops();
+        } catch (err: any) {
+            console.error(err);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: err?.message || 'Unexpected error occurred',
+                life: 5000
+            });
+        }
     }
 }

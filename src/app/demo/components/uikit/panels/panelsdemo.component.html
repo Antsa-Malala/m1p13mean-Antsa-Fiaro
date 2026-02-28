@@ -76,7 +76,7 @@
                         </ng-container>
 
                         <ng-template #noBox>
-                            <li class="py-1 flex align-items-center mt-3">
+                            <li *ngIf="user?.role === 'SHOP'" class="py-1 flex align-items-center mt-3">
                                 <span class="p-tag bg-red-600 text-white px-2 py-1 border-round md:text-base">
                                     <i class="pi pi-home mr-2 text-white-500"></i>
                                     You're not assigned to a box yet

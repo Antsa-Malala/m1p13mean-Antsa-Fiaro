@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,29 +11,40 @@ export class PanelsDemoComponent implements OnInit {
 
     cardMenu: MenuItem[] = [];
 
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService, private messageService: MessageService) { }
 
     ngOnInit() {
-        this.userService.loadUser();
-        this.user = this.userService.getConnectedUser();
-        this.userService.user$.subscribe(u => this.user = u);
+        try{
 
-        this.items = [
-            { label: 'Angular.io', icon: 'pi pi-external-link', url: 'http://angular.io' },
-            { label: 'Theming', icon: 'pi pi-bookmark', routerLink: ['/theming'] }
-        ];
-
-        this.cardMenu = [
-            {
-                label: 'Save', icon: 'pi pi-fw pi-check'
-            },
-            {
-                label: 'Update', icon: 'pi pi-fw pi-refresh'
-            },
-            {
-                label: 'Delete', icon: 'pi pi-fw pi-trash'
-            },
-        ];
+            this.userService.loadUser();
+            this.user = this.userService.getConnectedUser();
+            this.userService.user$.subscribe(u => this.user = u);
+    
+            this.items = [
+                { label: 'Angular.io', icon: 'pi pi-external-link', url: 'http://angular.io' },
+                { label: 'Theming', icon: 'pi pi-bookmark', routerLink: ['/theming'] }
+            ];
+    
+            this.cardMenu = [
+                {
+                    label: 'Save', icon: 'pi pi-fw pi-check'
+                },
+                {
+                    label: 'Update', icon: 'pi pi-fw pi-refresh'
+                },
+                {
+                    label: 'Delete', icon: 'pi pi-fw pi-trash'
+                },
+            ];
+        }  catch (err: any) {
+            console.error(err);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: err?.message || 'Unexpected error occurred',
+                life: 5000
+            });
+        }
     }
 
     getAccountAge(): string {

@@ -11,14 +11,17 @@ export class AuthRoleGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): boolean {
 
     const token = localStorage.getItem('token');
-    const userStr = localStorage.getItem('connectedUser');
 
-    if (!token || !userStr) {
+    if (!token) {
       this.router.navigate(['/auth/login']);
       return false;
     }
 
-    const user = JSON.parse(userStr);
+    const payload = this.decodeToken(token);
+    if (!payload) {
+      this.router.navigate(['/auth/login']);
+      return false;
+    }
 
     const allowedRoles = route.data['roles'];
 
@@ -26,11 +29,20 @@ export class AuthRoleGuard implements CanActivate {
       return true;
     }
 
-    if (!allowedRoles.includes(user.role)) {
+    if (!allowedRoles.includes(payload.role)) {
       this.router.navigate(['/auth/access']);
       return false;
     }
 
     return true;
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload));
+    } catch {
+      return null;
+    }
   }
 }

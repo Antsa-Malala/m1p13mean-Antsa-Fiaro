@@ -6,21 +6,46 @@
     font-size: 12px;
     letter-spacing: .3px;
 
-    &.status-instock {
+    &.status-available {
         background: #C8E6C9;
         color: #256029;
     }
 
-    &.status-outofstock {
+    &.status-occupied {
         background: #FFCDD2;
         color: #C63737;
     }
 
-    &.status-lowstock {
+    &.status-maintenance {
         background: #FEEDAF;
         color: #8A5340;
     }
 }
+
+.box-badge {
+    border-radius: var(--border-radius);
+    padding: .25em .5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+
+    &.status-available {
+        background: #C8E6C9;
+        color: #256029;
+    }
+
+    &.status-occupied {
+        background: #FFCDD2;
+        color: #C63737;
+    }
+
+    &.status-maintenance {
+        background: #FEEDAF;
+        color: #8A5340;
+    }
+}
+
 
 .customer-badge {
     border-radius: var(--border-radius);

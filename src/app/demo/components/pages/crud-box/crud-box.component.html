@@ -1,0 +1,150 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-secondary mr-2 mt-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger mr-2 mt-2" (click)="deleteSelectedBoxes()" [disabled]="!selectedBoxes || !selectedBoxes.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="boxes" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['floor','number','status']" [rows]="10" [paginator]="true" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedBoxes" selectionMode="multiple" [rowHover]="true" dataKey="_id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage Boxes</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="floor">Floor <p-sortIcon field="floor"></p-sortIcon></th>
+                        <th pSortableColumn="number">Number <p-sortIcon field="number"></p-sortIcon></th>
+                        <th>Image</th>
+                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                        <th pSortableColumn="shop">Shop <p-sortIcon field="shop"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-box>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="box"></p-tableCheckbox>
+                        </td>
+                        <td style="width:20; min-width:10rem;"><span class="p-column-title">Floor</span>
+                            {{box.floor}}
+                        </td>
+                        <td style="width:20; min-width:10rem;">
+                            <span class="p-column-title">Number</span>
+                            {{box.number}}
+                        </td>
+                        <td style="width:20; min-width:10rem;"><span class="p-column-title">Image</span>
+                            <img *ngIf="box.image" [src]="box.image" [alt]="box.name" width="100" class="shadow-4" />
+                        </td>
+                        <td style="width:20; min-width: 10rem;"><span class="p-column-title">Status</span>
+                            <span [class]="'box-badge status-' + (box.status ? box.status.toLowerCase() : '')">{{box.status}}</span>
+                        </td>
+                        <td style="width:20; min-width:10rem;">
+                            <span class="p-column-title">Shop</span>
+                            {{box.shop?.name}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-blue mr-2" (click)="editBox(box)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger mr-2" (click)="deleteBox(box)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="boxDialog" [style]="{width: '450px'}" header="Box Details" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <img [src]="box.image" [alt]="box.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="box.image">
+                <div class="field">
+                    <label for="status">Status</label>
+                    <p-dropdown id="status" [options]="statuses" optionLabel="label"  optionValue="value" [(ngModel)]="box.status" placeholder="Select a Status">
+                        <ng-template pTemplate="selectedItem">
+                            <span *ngIf="box && box.status" [class]="'box-badge status-' + box.status">{{box.status}}</span>
+                        </ng-template>
+                        <ng-template let-status pTemplate="status">
+                            <span [class]="'box-badge status-' + status.value">{{status.label}}</span>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+
+                <div class="field">
+                    <label for="floor">Floor</label>
+                    <input type="number" pInputText id="floor" [(ngModel)]="box.floor" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !box.floor}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !box.floor">Floor is required.</small>
+                </div>
+
+                <div class="field">
+                    <label for="number">Number</label>
+                    <input type="number" pInputText id="number" [(ngModel)]="box.number" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !box.number}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !box.number">Number is required.</small>
+                </div>
+
+                <div class="field">
+                    <label for="shop">Assign shop</label>
+                    <p-listbox id="shop" [options]="shops" [(ngModel)]="box.shop" optionLabel="name" [filter]="true" filterBy="name" [style]="{'max-height':'500px','overflow-y':'auto'}" [listStyle]="{'max-height':'500px'}" [emptyMessage]="'No shops available'">
+                        <ng-template let-shop pTemplate="item">
+                            <div class="flex justify-content-between align-items-center">
+                                <span>{{ shop.name }}</span>
+                                <span class="box-badge status-available ml-2">
+                                    {{ shop.status }}
+                                </span>
+                            </div>
+                        </ng-template>
+                    </p-listbox>
+                </div>
+
+                <div class="field">
+                    <label for="image">Image</label>
+                    <button type="button" pButton icon="pi pi-upload" label="Choose Image" (click)="fileInput.click()"></button>
+                    <input #fileInput type="file" style="display:none" (change)="onFileSelect($event)">
+                    <span *ngIf="selectedFile">{{selectedFile.name}}</span>
+                </div>
+
+
+            </ng-template>
+
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveBox()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteBoxDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="box">Are you sure you want to delete box n°<b>{{box.number}}</b> at floor <b>{{box.floor}}</b> ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteBoxDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteBoxesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected boxes?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteBoxesDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

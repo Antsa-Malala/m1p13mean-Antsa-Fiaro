@@ -61,13 +61,29 @@
                             </span>
                         </li>
 
-                        <li class="py-1 flex align-items-center mt-3" *ngIf="user?.boxNumber">
-                            <span class="p-tag bg-cyan-600 text-white px-2 py-1 border-round md:text-base">
-                                <i class="pi pi-home mr-2 text-white-500"></i>
-                                Box Number : {{ user?.boxNumber }}
-                            </span>
-                        </li>
+                        <ng-container *ngIf="user?.box; else noBox">
+                             <li class="py-1 flex align-items-center mt-3">
+                                <span class="p-tag bg-cyan-600 text-white px-2 py-1 border-round md:text-base">
+                                    <i class="pi pi-home mr-2 text-white-500"></i>
+                                    Floor {{ user.box.floor || '-' }} | Box n° {{ user.box.number || '-' }}
+                                </span>
+                            </li>
 
+                            <li class="py-1 flex align-items-center mt-3">
+                                <img *ngIf="user.box.image" [src]="user.box.image" alt="Box Image" class="mr-2 border-round shadow-2" style="max-width: 150px; max-height: 150px; height: auto; width: auto;"
+                                />
+                            </li>
+                        </ng-container>
+
+                        <ng-template #noBox>
+                            <li class="py-1 flex align-items-center mt-3">
+                                <span class="p-tag bg-red-600 text-white px-2 py-1 border-round md:text-base">
+                                    <i class="pi pi-home mr-2 text-white-500"></i>
+                                    You're not assigned to a box yet
+                                </span>
+                            </li>
+                        </ng-template>
+                    
                     </ul>
 
                 </div>

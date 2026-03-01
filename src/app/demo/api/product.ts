@@ -1,12 +1,17 @@
+import { Category } from "./category";
+import { User } from "./user";
+import { Variant } from "./variant";
+
 export interface Product {
-    id?: string;
-    code?: string;
+    _id?: string;
     name?: string;
     description?: string;
-    price?: number;
-    quantity?: number;
-    inventoryStatus?: any;
-    category?: string;
+    category?: Category;
+    brand?: string;
     image?: string;
-    rating?: number;
+    status?: string;
+    shop?: User;
+    variants? : Variant[];
+    price?: number;
+    stock?: number;
 }

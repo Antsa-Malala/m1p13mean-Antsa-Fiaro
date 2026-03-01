@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
+import { UserService } from '../services/user.service';
 
 @Component({
     selector: 'app-menu',
@@ -10,9 +11,28 @@ export class AppMenuComponent implements OnInit {
 
     model: any[] = [];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(public layoutService: LayoutService, private userService: UserService) { }
 
     ngOnInit() {
+        this.userService.user$.subscribe(user => {
+            if (!user) return;
+
+            this.buildMenu(user.role);
+        });
+    }
+
+    private buildMenu(role: string) {
+        const manageItems = [
+            { label: 'Products', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/pages/crud'] }
+        ];
+
+        if (role === 'ADMIN') {
+            manageItems.push(
+                { label: 'Categories', icon: 'pi pi-fw pi-tags', routerLink: ['/pages/crud-category'] },
+                { label: 'Boxes', icon: 'pi pi-fw pi-box', routerLink: ['/pages/crud-box'] }
+            );
+        }
+
         this.model = [
             {
                 label: 'Home',
@@ -21,8 +41,27 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'UI Components',
+                label: 'Manage',
+                items: manageItems
+            }
+        ];
+    }
+
+    /*ngOnInit() {
+        this.model = [
+            {
+                label: 'Home',
                 items: [
+                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] }
+                ]
+            },
+            {
+                label: 'Manage',
+                items: [
+                    { label: 'Products', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/pages/crud'] },
+                    { label: 'Categories', icon: 'pi pi-fw pi-tags', routerLink: ['/pages/crud-category'] },
+                    { label: 'Boxes', icon: 'pi pi-fw pi-box', routerLink: ['/pages/crud-box'] },
+                    /*
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
                     { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
                     { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
@@ -41,7 +80,9 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] },
                     { label: 'MyDashBoard', icon: 'pi pi-fw pi-id-card', routerLink: ['/mydashboard'] }
                 ]
-            },
+            }
+            
+            /*,
             {
                 label: 'Prime Blocks',
                 items: [
@@ -163,5 +204,5 @@ export class AppMenuComponent implements OnInit {
                 ]
             }
         ];
-    }
+    }*/
 }

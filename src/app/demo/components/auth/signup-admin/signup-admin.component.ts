@@ -46,7 +46,7 @@ export class SignupAdminComponent {
       next: (res: any) => {
         localStorage.setItem('token', res.token);
 
-        this.router.navigate(['/uikit/overlay']);
+        this.router.navigate(['/profile']);
       },
 
       error: (err) => {

@@ -65,10 +65,6 @@ export class CrudBoxComponent implements OnInit {
         this.boxDialog = true;
     }
 
-    deleteSelectedBoxes() {
-        this.deleteBoxesDialog = true;
-    }
-
     editBox(boxToEdit: Box) {
         this.box = { ...boxToEdit };
         this.submitted = false;
@@ -79,13 +75,6 @@ export class CrudBoxComponent implements OnInit {
     deleteBox(box: Box) {
         this.deleteBoxDialog = true;
         this.box = { ...box };
-    }
-
-    confirmDeleteSelected() {
-        this.deleteBoxesDialog = false;
-        this.boxes = this.boxes.filter(val => !this.selectedBoxes.includes(val));
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Boxes Deleted', life: 3000 });
-        this.selectedBoxes = [];
     }
 
     confirmDelete() {
@@ -106,7 +95,6 @@ export class CrudBoxComponent implements OnInit {
     
             this.box = {};
         } catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -127,6 +115,7 @@ export class CrudBoxComponent implements OnInit {
         this.submitted = true;
 
         if (!this.box.floor || !this.box.number) {
+            this.messageService.add({severity:'warn', summary:'Warning', detail:'Please fill all required fields'});
             return;
         }
 
@@ -141,6 +130,7 @@ export class CrudBoxComponent implements OnInit {
             }
 
             if (this.selectedFile) {
+                console.log("niditra taot box");
                 formData.append('image', this.selectedFile);
             }
 
@@ -157,7 +147,6 @@ export class CrudBoxComponent implements OnInit {
                         this.loadShops();
                     },
                     error: (err) => {
-                        console.error(err);
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Error',

@@ -47,7 +47,7 @@ export class SignupShopComponent {
         res.user.role = 'SHOP';
         localStorage.setItem('token', res.token);
 
-        this.router.navigate(['/uikit/overlay']);
+        this.router.navigate(['/profile']);
       },
 
       error: (err) => {

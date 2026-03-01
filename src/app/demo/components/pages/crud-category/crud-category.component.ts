@@ -62,7 +62,6 @@ export class CrudCategoryComponent implements OnInit {
 
     deleteCategory(category: Category) {
         this.deleteCategoryDialog = true;
-        console.log(category);
         this.category = { ...category };
     }
 
@@ -119,10 +118,6 @@ export class CrudCategoryComponent implements OnInit {
             const formData = new FormData();
             formData.append('name', this.category.name ?? '');
             formData.append('description', this.category.description ?? '');
-
-            formData.forEach((value, key) => {
-                console.log(key, value);
-            });
 
             if (this.selectedFile) {
                 formData.append('image', this.selectedFile);

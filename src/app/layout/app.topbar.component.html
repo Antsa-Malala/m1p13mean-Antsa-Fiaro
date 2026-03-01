@@ -4,7 +4,7 @@
         <span>TSENANTSIKA</span>
     </a>
 
-    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+    <button #menubutton  *ngIf="!isClient" class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
         <i class="pi pi-bars"></i>
     </button>
 
@@ -13,6 +13,13 @@
     </button>
 
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        
+        <a href="/profile" *ngIf="isClient">
+            <button class="p-link layout-topbar-button">
+                <i class="pi pi-shopping-cart p-text-secondary" pBadge value="2"></i>
+                <span>Profile</span>
+            </button>
+        </a>
         <a href="/profile">
             <button class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>

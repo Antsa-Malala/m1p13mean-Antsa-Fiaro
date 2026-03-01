@@ -6,17 +6,11 @@
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
                     </div>
-                </ng-template>
-
-                <ng-template pTemplate="right">
-                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
-                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="products" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','country.name','representative.name','status']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="products" [expandedRowKeys]="expandedRows" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','description','category.name','status','category.name']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="_id" (onRowExpand)="onRowExpand($event.data)">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Manage Products</h5>
@@ -28,116 +22,181 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
-                        <th pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
+                        <th style="width: 3rem"></th>
                         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                        <th>Image</th>
                         <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-                        <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
-                        <th pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon></th>
-                        <th pSortableColumn="inventoryStatus">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                        <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
+                        <th>Image</th>
+                        <th>Category</th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-product let-expanded="expanded">
                     <tr>
                         <td>
-                            <p-tableCheckbox [value]="product"></p-tableCheckbox>
+							<button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td>
+                        <td style="min-width: 12rem;">{{product.name}}</td>
+                        <td style="min-width: 12rem;">{{product.price}}</td>
+                        <td style="min-width: 12rem;">{{product.stock}}</td>
+						 <td>
+                            <ng-container *ngIf="product.image; else noImage">
+                                <img [src]="product.image" [alt]="product.size" width="100" class="shadow-4" />
+                            </ng-container>
+                            <ng-template #noImage>
+                                <span>Aucune photo</span>
+                            </ng-template>
                         </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{product.code || product.id}}
-                        </td>
-                        <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Name</span>
-                            {{product.name}}
-                        </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Image</span>
-                            <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="shadow-4" />
-                        </td>
-                        <td style="width:14%; min-width:8rem;">
-                            <span class="p-column-title">Price</span>
-                            {{product.price | currency:'USD'}}
-                        </td>
-                        <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Category</span>
-                            {{product.category}}
-                        </td>
-                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Reviews</span>
-                            <p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating>
-                        </td>
-                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Status</span>
-                            <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
-                        </td>
+						<td style="min-width: 8rem;">{{product.category.name}}</td>
+						<td><span [class]="'product-badge status-' + (product.status ? product.status.toLowerCase() : '')">{{product.status}}</span></td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-outlined p-button-primary mr-2" (click)="editProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-outlined p-button-warning" (click)="deleteProduct(product)"></button>
                             </div>
                         </td>
                     </tr>
                 </ng-template>
-            </p-table>
-        </div>
+                <ng-template pTemplate="rowexpansion" let-product>
+                    <tr>
+                        <td colspan="7">
+                        <div class="p-3">
+                            <p-table [value]="product.variants" dataKey="_id" responsiveLayout="scroll" *ngIf="product.variants?.length; else noVariants">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                <th>Image</th>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th style="width: 4rem"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-variant>
+                                <tr>
+                                <td>
+                                    <ng-container *ngIf="variant.image; else noImage">
+                                    <img [src]="variant.image" [alt]="variant.size" width="100" class="shadow-4" />
+                                    </ng-container>
+                                    <ng-template #noImage><span>Aucune photo</span></ng-template>
+                                </td>
+                                <td>{{variant.size}}</td>
+                                <td>{{variant.color}}</td>
+                                <td>{{variant.price}}</td>
+                                <td>{{variant.stock}}</td>
+                                <td>
+                                    <div class="flex">
+                                        <button pButton icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger" (click)="deleteVariant(product, variant)"></button>
+                                    </div>
+                                </td>
+                                </tr>
+                            </ng-template>
+                            </p-table>
+                            <ng-template #noVariants>
+                            <span>There are no variants for this product.</span>
+                            </ng-template>
+                        </div>
+                        </td>
+                    </tr>
+                </ng-template>
+			</p-table>
+		</div>
 
         <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
+                <img [src]="product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
                 <div class="field">
                     <label for="name">Name</label>
                     <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.name}"/>
                     <small class="ng-dirty ng-invalid" *ngIf="submitted && !product.name">Name is required.</small>
                 </div>
+                
                 <div class="field">
                     <label for="description">Description</label>
                     <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3" cols="20"></textarea>
                 </div>
+                
+                <div class="field">
+                    <label for="category">Category</label>
+                    <p-autoComplete  [(ngModel)]="product.category" [suggestions]="filteredCategories" (completeMethod)="filterCategory($event)" field="name" [dropdown]="true" [minLength]="0" [forceSelection]="true" [placeholder]="'Select a category'">
+                        <ng-template let-category pTemplate="item">
+                            <div class="flex justify-content-between align-items-center">
+                                <span>{{ category.name }}</span>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
 
                 <div class="field">
-                    <label for="status">Inventory Status</label>
-                    <p-dropdown id="status" [options]="statuses" optionLabel="label" [(ngModel)]="product.inventoryStatus" placeholder="Select a Status">
+                    <label for="brand">Brand</label>
+                    <input type="text" pInputText id="brand" [(ngModel)]="product.brand" required autofocus/>
+                </div>
+
+                <div class="field">
+                    <label for="status">Status</label>
+                    <p-dropdown id="status" [options]="statuses" optionLabel="label"  optionValue="value" [(ngModel)]="product.status" placeholder="Select a Status">
                         <ng-template pTemplate="selectedItem">
-                            <span *ngIf="product && product.inventoryStatus" [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span>
+                            <span *ngIf="product && product.status" [class]="'product-badge status-' + product.status">{{product.status}}</span>
                         </ng-template>
                         <ng-template let-status pTemplate="status">
-                            <span [class]="'product-badge status-' + status.value.toLowerCase()">{{status.label}}</span>
+                            <span [class]="'box-badge status-' + status.value">{{status.label}}</span>
                         </ng-template>
                     </p-dropdown>
                 </div>
 
                 <div class="field">
-                    <label class="mb-3">Category</label>
-                    <div class="formgrid grid">
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category1" name="category" value="Accessories" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category1">Accessories</label>
+                    <label for="image">Image</label>
+                    <button class="mb-2" type="button" pButton icon="pi pi-upload" label="Choose Image" (click)="fileInput.click()"></button>
+                    <input #fileInput type="file" style="display:none" (change)="onFileSelect($event)">
+                    <span *ngIf="selectedFile">{{selectedFile.name}}</span>
+                </div>
+
+                <div class="formgrid">
+                    <div *ngFor="let variant of product.variants; let i = index"
+                        class="formgrid grid align-items-end mb-2 col-12 ml-0 p-0 mr-0">
+
+                        <div class="field col-2 p-1">
+                            <label>Size</label>
+                            <input pInputText [(ngModel)]="variant.size" />
                         </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category2" name="category" value="Clothing" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category2">Clothing</label>
+
+                        <div class="field col-3 p-1">
+                            <label>Color</label>
+                            <input pInputText [(ngModel)]="variant.color" />
                         </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category3" name="category" value="Electronics" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category3">Electronics</label>
+
+                        <div class="field col-3 p-1">
+                            <label>Price</label>
+                            <p-inputNumber [(ngModel)]="variant.price" mode="currency" currency="MGA" locale="fr-MG"></p-inputNumber>
                         </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category4" name="category" value="Fitness" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category4">Fitness</label>
+
+                        <div class="field col-2 p-1">
+                            <label>Stock</label>
+                            <p-inputNumber [(ngModel)]="variant.stock"></p-inputNumber>
                         </div>
+
+                        <div class="field col-2 p-1">
+                            <button type="button" pButton [icon]="variantFiles[i] ? 'pi pi-image' : 'pi pi-upload'" (click)="fileInput.click()"></button>
+                            <input #fileInput type="file" style="display:none" (change)="onVariantFileSelect($event, i)">
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-2 p-0">
+                        <button pButton label="Add Variant" icon="pi pi-plus" class="p-button-outlined w-full" (click)="addVariant()"></button>
                     </div>
                 </div>
 
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="price">Price</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-                    </div>
-                    <div class="field col">
-                        <label for="quantity">Quantity</label>
-                        <p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
-                    </div>
+                <div class="field">
+                    <label>Price</label>
+                    <p-inputNumber [(ngModel)]="product.price" [disabled]="hasVariants" mode="currency" currency="MGA" locale="fr-MG"></p-inputNumber>
                 </div>
+
+                <div class="field">
+                    <label>Stock</label>
+                    <p-inputNumber [(ngModel)]="product.stock" [disabled]="hasVariants"></p-inputNumber>
+                </div>
+
             </ng-template>
 
             <ng-template pTemplate="footer">
@@ -154,17 +213,6 @@
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
-            </ng-template>
-        </p-dialog>
-
-        <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
-            <div class="flex align-items-center justify-content-center">
-                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span>Are you sure you want to delete selected products?</span>
-            </div>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductsDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
             </ng-template>
         </p-dialog>
     </div>

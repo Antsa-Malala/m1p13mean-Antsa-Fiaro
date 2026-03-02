@@ -24,7 +24,7 @@
                     <tr>
                         <th style="width: 3rem"></th>
                         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                        <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+                        <th pSortableColumn="price">Minimum price <p-sortIcon field="price"></p-sortIcon></th>
                         <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
                         <th>Image</th>
                         <th>Category</th>
@@ -188,7 +188,7 @@
                 </div>
 
                 <div class="field">
-                    <label>Price</label>
+                    <label>Minimum price</label>
                     <p-inputNumber [(ngModel)]="product.price" [disabled]="hasVariants" mode="currency" currency="MGA" locale="fr-MG"></p-inputNumber>
                 </div>
 

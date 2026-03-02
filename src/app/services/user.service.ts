@@ -20,7 +20,7 @@ export class UserService {
     loadUser() {
       this.http.get<any>(`${this.apiUrl}/me`).subscribe({
         next: (user) => {
-          if (user?._id) {
+          if (user?._id && user?.role ==='SHOP') {
             this.getMyBox(user._id).subscribe({
               next: (data: Box) => {
                 user.box = data;

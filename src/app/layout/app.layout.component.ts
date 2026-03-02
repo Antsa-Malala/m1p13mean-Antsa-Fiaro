@@ -11,7 +11,7 @@ import { UserService } from '../services/user.service';
     templateUrl: './app.layout.component.html'
 })
 export class AppLayoutComponent implements OnDestroy {
-
+    user: any;
     overlayMenuOpenSubscription: Subscription;
 
     menuOutsideClickListener: any;
@@ -122,8 +122,19 @@ export class AppLayoutComponent implements OnDestroy {
         }
     }
 
+    ngOnInit() {
+        this.userService.user$.subscribe(user => {
+            this.user = user;
+            if(this.isClient) { 
+                this.layoutService.state.overlayMenuActive = false;
+                this.layoutService.state.staticMenuDesktopInactive = true; 
+                this.layoutService.state.staticMenuMobileActive = false; 
+                this.layoutService.state.menuHoverActive = false; 
+            }
+        });
+    }
+
     get isClient(): boolean {
-        const user = this.userService.getConnectedUser();
-        return user?.role === 'CUSTOMER';
+        return this.user?.role === 'CUSTOMER';
     }
 }

@@ -31,10 +31,9 @@ export class LoginComponent {
             next: (res: any) => {
                 localStorage.setItem('token', res.token);
 
-                this.router.navigate(['/profile']);
+                this.router.navigate(['/sale']);
             },
             error: (err) => {
-                console.error('Erreur login', err);
                 this.errorMessage = 'Email ou mot de passe incorrect';
             }
         });

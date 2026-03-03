@@ -37,7 +37,6 @@ export class PanelsDemoComponent implements OnInit {
                 },
             ];
         }  catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',

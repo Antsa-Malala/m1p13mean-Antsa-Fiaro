@@ -167,7 +167,6 @@ export class CrudBoxComponent implements OnInit {
                         this.loadBoxes();
                     },
                     error: (err) => {
-                        console.error(err);
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Error',
@@ -181,7 +180,6 @@ export class CrudBoxComponent implements OnInit {
             this.boxDialog = false;
             this.box = {};
         } catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -216,7 +214,6 @@ export class CrudBoxComponent implements OnInit {
             this.boxService.getBoxes()
             .then((data: Box[]) => this.boxes = data);
         } catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -230,7 +227,6 @@ export class CrudBoxComponent implements OnInit {
         try{
             this.shops = await this.userService.availableShops();
         } catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',

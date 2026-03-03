@@ -6,7 +6,8 @@ import { UserService } from '../services/user.service';
 
 @Component({
     selector: 'app-topbar',
-    templateUrl: './app.topbar.component.html'
+    templateUrl: './app.topbar.component.html',
+    styleUrls: ['./app.topbar.component.scss']
 })
 export class AppTopBarComponent {
     user: any;
@@ -37,9 +38,24 @@ export class AppTopBarComponent {
             CUSTOMER: '/auth/login'
         };
         this.router.navigate([routes[role] || '/auth/login']);
+        sessionStorage.clear();
     }
 
     get isClient(): boolean {
         return this.user?.role === 'CUSTOMER';
+    }
+
+    getSelectedProductsCount(): string {
+        const data = sessionStorage.getItem('selectedProduct');
+        if (data) {
+            const products = JSON.parse(data);
+            
+            const totalQuantity = products.reduce((sum: number, item: any) => {
+            return sum + (item.chosenQuantity || 0);
+            }, 0);
+
+            return totalQuantity.toString();
+        }
+        return '0';
     }
 }

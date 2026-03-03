@@ -52,7 +52,6 @@ export class SignupComponent {
         },
   
         error: (err) => {
-          console.error('Erreur inscription/login', err);
           this.errorMessage = "Erreur lors de l'inscription";
         }
       });

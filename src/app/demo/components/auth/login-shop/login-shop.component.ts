@@ -34,7 +34,6 @@ export class LoginShopComponent {
             this.router.navigate(['/profile']);
         },
         error: (err) => {
-            console.error('Erreur login', err);
             this.errorMessage = 'Email ou mot de passe incorrect';
         }
         });

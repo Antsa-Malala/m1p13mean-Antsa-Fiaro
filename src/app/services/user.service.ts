@@ -27,7 +27,7 @@ export class UserService {
               },
               error: (err) => console.error(err)
             });
-          }
+          };
           this.userSubject.next(user);
         },
         error: (err) => {

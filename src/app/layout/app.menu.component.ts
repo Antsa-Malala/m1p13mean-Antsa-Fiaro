@@ -21,36 +21,39 @@ export class AppMenuComponent implements OnInit {
         });
     }
 
-    private buildMenu(role: string) {
-        const manageItems = [
-            { label: 'Products', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/pages/crud'] }
-        ];
-        
-        if (role === 'SHOP') {
-            manageItems.push(
-                { label: 'Restock', icon: 'pi pi-fw pi-box', routerLink: ['/purchase'] }
-            );
-        } 
-
+    private buildMenu(role: string) {        
         if (role === 'ADMIN') {
-            manageItems.push(
-                { label: 'Categories', icon: 'pi pi-fw pi-tags', routerLink: ['/pages/crud-category'] },
-                { label: 'Boxes', icon: 'pi pi-fw pi-box', routerLink: ['/pages/crud-box'] }
-            );
+            this.model = [
+                {
+                    label: 'Home',
+                    items: [
+                        { label: 'Dashboard', icon: 'pi pi-fw pi-chart-line', routerLink: ['/dashboard'] }
+                    ]
+                },
+                {
+                    label: 'Manage',
+                    items: 
+                    [
+                        { label: 'Categories', icon: 'pi pi-fw pi-tags', routerLink: ['/pages/crud-category'] },
+                        { label: 'Boxes', icon: 'pi pi-fw pi-box', routerLink: ['/pages/crud-box'] },
+                        { label: 'Products', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/pages/crud'] }
+                    ]
+                }
+            ]
         }
 
+        if (role === 'SHOP') {
         this.model = [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] }
-                ]
-            },
-            {
-                label: 'Manage',
-                items: manageItems
-            }
-        ];
+                {
+                    label: 'Manage',
+                    items: 
+                    [
+                        { label: 'Products', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/pages/crud'] },
+                        { label: 'Restock', icon: 'pi pi-fw pi-box', routerLink: ['/purchase'] }
+                    ]
+                }
+            ]
+        }
     }
 
     /*ngOnInit() {

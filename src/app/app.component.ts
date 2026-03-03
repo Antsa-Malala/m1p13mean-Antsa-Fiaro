@@ -22,6 +22,7 @@ export class AppComponent {
 import { Component, OnInit } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { LayoutService } from './layout/service/app.layout.service';
+import { LoadingService } from './services/loading.service';
 
 @Component({
     selector: 'app-root',
@@ -29,7 +30,7 @@ import { LayoutService } from './layout/service/app.layout.service';
 })
 export class AppComponent implements OnInit {
 
-    constructor(private primengConfig: PrimeNGConfig, private layoutService: LayoutService) { }
+    constructor(private primengConfig: PrimeNGConfig, private layoutService: LayoutService, public loadingService : LoadingService) { }
 
     ngOnInit(): void {
         this.primengConfig.ripple = true;       //enables core ripple functionality

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { UserService } from 'src/app/services/user.service';
 import { switchMap } from 'rxjs';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-signup-admin',
@@ -18,7 +19,7 @@ export class SignupAdminComponent {
   password: string = '';
   errorMessage: string = '';
      
-  constructor(public layoutService: LayoutService, private userService: UserService, private router: Router) { }
+  constructor(public layoutService: LayoutService, private userService: UserService, private router: Router, private loadingService : LoadingService) { }
    
   onSignup() {
 
@@ -30,7 +31,7 @@ export class SignupAdminComponent {
     };
 
     this.errorMessage = '';
-
+    this.loadingService.show();
     this.userService.signup(userData).pipe(
 
       switchMap(() => {
@@ -45,11 +46,12 @@ export class SignupAdminComponent {
 
       next: (res: any) => {
         localStorage.setItem('token', res.token);
-
+        this.loadingService.hide();
         this.router.navigate(['/profile']);
       },
 
       error: (err) => {
+        this.loadingService.hide();
         this.errorMessage = "Erreur lors de l'inscription";
       }
     });

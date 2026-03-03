@@ -15,6 +15,7 @@
                 </div>
 
                 <div class="w-full md:w-10 mx-auto">
+                    
                     <form (ngSubmit)="onLogin()" #loginForm="ngForm" novalidate>
                         <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
                         <input id="email1" name="email" [(ngModel)]="email" type="email" placeholder="Your email address" pInputText class="w-full mb-3" style="padding:1rem;" required email #emailField="ngModel">

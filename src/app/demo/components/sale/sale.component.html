@@ -1,0 +1,97 @@
+<div class="card">
+    <p-dataView #dv [value]="availableProducts" layout="grid" [paginator]="true" [rows]="8" filterBy="name">
+        <ng-template pTemplate="header">
+            <div class="flex justify-content-end">
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input 
+                        type="search" 
+                        pInputText 
+                        placeholder="Search by Name" 
+                        (input)="dv.filter($any($event.target).value)"> 
+                </span>
+            </div>
+        </ng-template>
+        <ng-template let-product pTemplate="gridItem">
+            <div class="col-12 md:col-4 lg:col-3 p-2">
+                <div class="p-4 border-1 surface-border surface-card border-round flex flex-column">
+                    <div class="p-4 border-1 surface-border surface-card border-round flex flex-column">
+                        
+                        <div class="flex justify-content-center mb-3">
+                            <img [src]="product.image || 'assets/placeholder.png'" 
+                                 [alt]="product.name" 
+                                 class="w-9 shadow-2 border-round" 
+                                 style="height: 150px; object-fit: cover;"/>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="flex align-items-center justify-content-between mb-2">
+                                <span class="text-sm font-medium text-500">{{ product.category?.name || 'Uncategorized' }}</span>
+                                <span [class]="'product-badge status-' + (product.status?.toLowerCase() || 'outstock')">
+                                    {{ product.status }}
+                                </span>
+                            </div>
+                            <div class="text-xl font-bold mb-2">{{ product.name }}</div>
+                            <div class="text-600 mb-3 line-height-3 text-sm" style="height: 3rem; overflow: hidden;">
+                                {{ product.description }}
+                            </div>
+                        </div>
+
+                        <div class="flex align-items-center justify-content-between mt-auto">
+                            <span class="text-2xl font-semibold">{{ product.price }} MGA</span>
+                            <p-button icon="pi pi-plus" (onClick)="openVariantSelector(product)"></p-button>
+                        </div>
+                        <p-dialog header="Select Variant" [(visible)]="displayVariants" [modal]="true" [style]="{ width: '500px', 'background-color': 'rgba(255, 255, 255, 0.9)' }"
+                        [contentStyle]="{ 'background-color': 'rgba(255, 255, 255, 0.9)' }">
+    
+                            <div *ngIf="selectedProduct" class="flex flex-column gap-3">
+                                
+                                <p-carousel [value]="selectedProduct.variants ?? []" [numVisible]="1" [numScroll]="1" [circular]="false">
+                                    <ng-template let-variant pTemplate="item">
+                                        <div class="border-1 surface-border border-round m-2 p-3 cursor-pointer transition-all"
+                                             [ngClass]="{'border-primary shadow-2': selectedVariant === variant}"
+                                             (click)="selectedVariant = variant">
+                                            
+                                            <div class="mb-3 flex justify-content-center">
+                                                <img [src]="variant.image || 'assets/placeholder.png'" 
+                                                     [alt]="variant.size" 
+                                                     class="w-full border-round" 
+                                                     style="height: 200px; object-fit: cover;" />
+                                            </div>
+                                            
+                                            <div class="flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="font-bold text-lg">{{ variant.size }} • {{ variant.color }}</div>
+                                                    <div class="text-600">Stock: {{ variant.stock }}</div>
+                                                </div>
+                                                <div class="text-xl font-bold text-primary">
+                                                    {{ variant.price }} MGA
+                                                </div>
+                                            </div>
+                        
+                                            <div class="mt-2 text-center" *ngIf="selectedVariant === variant">
+                                                <span class="text-primary font-bold"><i class="pi pi-check-circle"></i> Selected</span>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </p-carousel>
+                        
+                                <div class="flex align-items-center justify-content-between px-2">
+                                    <span class="font-medium">Quantity:</span>
+                                    <p-inputNumber [(ngModel)]="quantity" [min]="1" [showButtons]="true" 
+                                        buttonLayout="horizontal" spinnerMode="horizontal" 
+                                        inputStyleClass="text-center w-4rem" styleClass="p-inputnumber-sm">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <ng-template pTemplate="footer">
+                                <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-text" (onClick)="displayVariants = false"></p-button>
+                                <p-button label="Add to Cart" icon="pi pi-check" [disabled]="!selectedVariant" (onClick)="confirmSelection()"></p-button>
+                            </ng-template>
+                        </p-dialog>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-dataView>
+</div>

@@ -1,0 +1,106 @@
+<div class="grid justify-content-center">
+  <div class="col-12 md:col-6 lg:col-4">
+    <div class="card p-4 shadow-2 border-round">
+      <h5 class="mb-3">Choose the product</h5>
+      <p-dropdown
+        [options]="products"
+        [(ngModel)]="selectedProduct"
+        optionLabel="name"
+        placeholder="Select a product..."
+        [filter]="true"
+        filterBy="name,description"
+        [showClear]="true"
+        styleClass="w-full"
+        [virtualScrollItemSize]="30"
+      >
+        <ng-template let-product pTemplate="item">
+          <div class="flex align-items-center">
+            <img *ngIf="product.image" [src]="product.image" [alt]="product.name" height="auto" width="40" class="mr-3 border-round"  />
+            <div>
+              <div>{{ product.name }}</div>
+              <div class="text-500 text-sm">{{ product.description }}...</div>
+              <div class="text-sm font-bold mt-1">
+                {{ product.price }} MGA  • Stock: {{ product.stock }}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template let-product pTemplate="selectedItem">
+          <div class="flex align-items-center" *ngIf="product">
+            <img *ngIf="product.image" [src]="product.image" [alt]="product.name" width="32" class="mr-2 border-round" />
+            <span>{{ product.name }}</span>
+          </div>
+          <span *ngIf="!product">Select a product...</span>
+        </ng-template>
+      </p-dropdown>
+      <div class="mt-4" *ngIf="selectedProduct">
+        <h6>Details of the product :</h6>
+        <div class="surface-100 p-3 border-round">
+          <img *ngIf="selectedProduct.image" [src]="selectedProduct.image" alt="{{selectedProduct.name}}" class="w-full border-round mb-3" style="max-height: 200px; object-fit: cover;" />
+          <p><strong>Name :</strong> {{ selectedProduct.name }}</p>
+          <p><strong>Description :</strong> {{ selectedProduct.description }}</p>
+          <p><strong>Price :</strong> {{ selectedProduct.price }} MGA</p>
+          <p><strong>Stock :</strong> {{ selectedProduct.stock }}</p>
+          <p><strong>Category :</strong> {{ selectedProduct.category?.name }}</p>
+          <p><strong>Brand :</strong> {{ selectedProduct.brand }}</p>
+          <p><strong>Status :</strong> {{ selectedProduct.status }}</p>
+        </div>
+      </div>
+      <div>
+        <div class="mt-4" *ngIf="selectedProduct">
+            <div class="flex align-items-center gap-3 mt-4">
+                <div class="flex-grow-1">
+                    <p-dropdown 
+                        [options]="selectedProduct?.variants ?? []" 
+                        [(ngModel)]="selectedVariant" 
+                        placeholder="Select a variant" 
+                        styleClass="w-full"
+                        panelStyleClass="variant-dropdown-panel">
+                        
+                        <ng-template pTemplate="selectedItem">
+                            <div class="flex align-items-center gap-2" *ngIf="selectedVariant">
+                                <img [src]="selectedVariant.image" style="width: 24px" class="border-round" *ngIf="selectedVariant.image" />
+                                <span>{{ selectedVariant.size }} • {{ selectedVariant.color }}</span>
+                            </div>
+                        </ng-template>
+            
+                        <ng-template let-variant pTemplate="item">
+                            <div class="flex align-items-center justify-content-between w-full">
+                                <div class="flex align-items-center gap-3">
+                                    <img [src]="variant.image" style="width: 32px" class="border-round shadow-1" *ngIf="variant.image" />
+                                    <div class="flex flex-column">
+                                        <span class="font-medium text-sm">{{ variant.size || '–' }} • {{ variant.color }}</span>
+                                        <small class="text-500">Stock: {{ variant.stock }}</small>
+                                    </div>
+                                </div>
+                                <span class="font-bold text-primary ml-2">{{ variant.price }} MGA</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            
+                <div style="width: 80px;">
+                    <p-inputNumber 
+                        [(ngModel)]="quantity" 
+                        [min]="1"
+                        placeholder="Quantity"
+                        styleClass="w-full"
+                        inputStyleClass="w-full text-center p-inputtext-sm">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div class="mt-4">
+                <p-button 
+                    label="Purchase" 
+                    icon="pi pi-shopping-cart" 
+                    styleClass="w-full"
+                    [disabled]="!selectedVariant || loading"
+                    (onClick)="purchaseProduct()" 
+                >
+                </p-button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

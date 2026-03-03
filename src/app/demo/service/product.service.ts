@@ -32,6 +32,13 @@ export class ProductService {
                 .then(data => data);
     }
 
+    getProductsForCustomer() {
+        return this.http.get<any>(`${this.apiUrl}?status=INSTOCK`)
+            .toPromise()
+                .then(res => res as Product[])
+                .then(data => data);
+    }
+
     getAvailableProducts() {
         return this.http.get<any>(`${this.apiUrl}/available`)
             .toPromise()

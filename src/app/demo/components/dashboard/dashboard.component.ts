@@ -1,14 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
 import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+
+    user: any;
 
     items!: MenuItem[];
 
@@ -20,84 +23,74 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     subscription!: Subscription;
 
-    constructor(private productService: ProductService, public layoutService: LayoutService) {
-        this.subscription = this.layoutService.configUpdate$.subscribe(() => {
-            this.initChart();
-        });
+    orders! : number;
+
+    ordersThisMonth! : number;
+
+    income! : number;
+
+    incomeThisMonth! : number;
+
+    customer! : number;
+
+    customerThisMonth! : number;
+
+    shop! :  number;
+
+    shopThisMonth! : number;
+
+    boxOccupied! : number;
+
+    boxAvailable! : number;
+
+    boxMaintenance! : number;
+
+    productsNumber! : number;
+
+    productsThisMonth! : number;
+
+    constructor(private productService: ProductService, public layoutService: LayoutService, private userService : UserService, private messageService : MessageService) {
     }
 
     ngOnInit() {
-        this.initChart();
-        this.productService.getProductsSmall().then(data => this.products = data);
-
-        this.items = [
-            { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-            { label: 'Remove', icon: 'pi pi-fw pi-minus' }
-        ];
-    }
-
-    initChart() {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-        this.chartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'First Dataset',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--bluegray-700'),
-                    borderColor: documentStyle.getPropertyValue('--bluegray-700'),
-                    tension: .4
-                },
-                {
-                    label: 'Second Dataset',
-                    data: [28, 48, 40, 19, 86, 27, 90],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--green-600'),
-                    borderColor: documentStyle.getPropertyValue('--green-600'),
-                    tension: .4
-                }
-            ]
-        };
-
-        this.chartOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: textColor
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
-        };
+        this.loadStats();
+        this.userService.loadUser();
+        this.user = this.userService.getConnectedUser();
+        this.userService.user$.subscribe(u => this.user = u);
     }
 
     ngOnDestroy() {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
+    }
+
+    loadStats() {
+        this.productService.dashboard().subscribe({
+            next: (data: any) => {
+                console.log(data);
+                this.orders = data.orders;
+                this.ordersThisMonth = data.ordersThisMonth;
+                this.income = data.income?.toLocaleString('fr-FR');;
+                this.incomeThisMonth = data.incomeThisMonth?.toLocaleString('fr-FR');;
+                this.customer = data.customer;
+                this.customerThisMonth = data.customerThisMonth;
+                this.shop = data.shop;
+                this.shopThisMonth = data.shopThisMonth;
+                this.boxOccupied = data.boxOccupied;
+                this.boxAvailable = data.boxAvailable;
+                this.boxMaintenance = data.boxMaintenance;
+                this.productsNumber = data.products;
+                this.productsThisMonth = data.productsThisMonth;
+            },
+            error: (err: any) => {
+                this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: err?.message || 'Unexpected error occurred',
+                life: 5000
+                });
+            }
+        });
     }
 }

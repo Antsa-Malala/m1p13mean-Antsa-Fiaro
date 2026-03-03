@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Product } from '../api/product';
 import { environment } from 'src/environments/environment';
 import { UserService } from 'src/app/services/user.service';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -112,6 +113,10 @@ export class ProductService {
     purchaseShop(productId?: string, variantId?: string, quantity?: number) {
         const body = { "stockToAdd" : quantity };
         return this.http.post(`${this.apiUrl}/stockEntry/${productId}/${variantId}`, body);
+    }
+
+    dashboard(): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/api/dashBoard`);
     }
 
 }

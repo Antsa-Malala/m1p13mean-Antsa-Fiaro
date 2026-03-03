@@ -3,6 +3,7 @@ import { MessageService } from 'primeng/api';
 import { ProductService } from 'src/app/demo/service/product.service';
 import { Product } from 'src/app/demo/api/product';
 import { Variant } from 'src/app/demo/api/variant';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-sale',
@@ -11,7 +12,7 @@ import { Variant } from 'src/app/demo/api/variant';
   providers: [MessageService]  
 })
 export class SaleComponent implements OnInit {
-
+  user:any;
   availableProducts : Product[] = [];
   selectedProducts : Product[] = [];
   expandedProductId: string | null = null;
@@ -19,18 +20,21 @@ export class SaleComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private messageService: MessageService) { }
+    private messageService: MessageService, 
+    private userService : UserService) { }
 
   ngOnInit() {
+    this.userService.loadUser();
+    this.user = this.userService.getConnectedUser();
+    this.userService.user$.subscribe(u => this.user = u);
     this.loadAvailableProducts();
   }
 
   loadAvailableProducts(){
     try{
-      this.productService.getProductsForCustomer() // ito fonction ito tokony ho fonction hafa, fa io aloha no nandeha de io no nampiasako 
+      this.productService.getProductsForCustomer()
           .then((data: Product[]) => this.availableProducts = data);
       } catch (err: any) {
-          console.error(err);
           this.messageService.add({
               severity: 'error',
               summary: 'Error',
@@ -53,7 +57,6 @@ export class SaleComponent implements OnInit {
       this.displayVariants = true;
   }
 
-  //ito le manisy ao anaty panier, tsy mbola ao anaty session le izy fa efa afaka maka item maromaro
   confirmSelection() {
       if (this.selectedVariant) {
           const productToAdd = { 
@@ -63,8 +66,7 @@ export class SaleComponent implements OnInit {
           };
           this.selectedProducts.push(productToAdd);
           this.displayVariants = false;
-          console.log(this.selectedProducts);
-          
+          sessionStorage.setItem('selectedProduct', JSON.stringify(this.selectedProducts));
       }
   }
 }

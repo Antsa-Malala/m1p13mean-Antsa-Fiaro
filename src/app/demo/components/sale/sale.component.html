@@ -1,4 +1,6 @@
 <div class="card">
+    <p-toast></p-toast>
+    <h5>Find your needs</h5>
     <p-dataView #dv [value]="availableProducts" layout="grid" [paginator]="true" [rows]="8" filterBy="name">
         <ng-template pTemplate="header">
             <div class="flex justify-content-end">

@@ -90,7 +90,6 @@ export class CrudCategoryComponent implements OnInit {
 
             this.category = {};
         } catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -148,7 +147,6 @@ export class CrudCategoryComponent implements OnInit {
             this.categoryDialog = false;
             this.category = {};
         } catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -183,7 +181,6 @@ export class CrudCategoryComponent implements OnInit {
             this.categoryService.getCategories()
                 .then((data: Category[]) => this.categories = data);
         } catch (err: any) {
-            console.error(err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',

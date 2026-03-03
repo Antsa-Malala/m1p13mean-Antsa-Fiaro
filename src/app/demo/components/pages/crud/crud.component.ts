@@ -96,7 +96,6 @@ export class CrudComponent implements OnInit {
             this.selectedFile = undefined; 
             this.productDialog = true;
         }).catch(err => {
-            console.error('Error loading product for edit', err);
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -207,7 +206,6 @@ export class CrudComponent implements OnInit {
                         this.hideDialog();
                     },
                     error: (err) => {
-                        console.error('UPDATE ERROR FULL:', err);
                         this.messageService.add({
                             severity:'error', 
                             summary:'Error', 
@@ -229,7 +227,7 @@ export class CrudComponent implements OnInit {
                         this.hideDialog();
                     },
                     error: (err) => {
-                        console.error(err);
+            
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Error',
@@ -245,7 +243,7 @@ export class CrudComponent implements OnInit {
             this.selectedFile = undefined;
             this.variantFiles = [];
         } catch (err: any) {
-            console.error(err);
+
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -357,7 +355,7 @@ export class CrudComponent implements OnInit {
                 }
             })
         } catch (err: any) {
-            console.error(err);
+
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -371,7 +369,7 @@ export class CrudComponent implements OnInit {
         try{
             this.categories = await this.categoryService.getCategories();
         } catch (err: any) {
-            console.error(err);
+
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -386,7 +384,6 @@ export class CrudComponent implements OnInit {
             this.productService.getProductById(product._id).then(fullProduct => {
                 product.variants = fullProduct.variants || [];
             }).catch(err => {
-                console.error('Error loading variants for product', product._id, err);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -421,7 +418,7 @@ export class CrudComponent implements OnInit {
                     this.expandedRows = {};
                 },
                 error: (err) => {
-                    console.error(err);
+        
                 }
             });
         } catch (err: any) {

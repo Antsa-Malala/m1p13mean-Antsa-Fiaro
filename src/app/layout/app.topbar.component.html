@@ -13,10 +13,18 @@
     </button>
 
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        
-        <a href="/profile" *ngIf="isClient">
+        <a href="/sale" *ngIf="isClient">
             <button class="p-link layout-topbar-button">
-                <i class="pi pi-shopping-cart p-text-secondary" pBadge value="2"></i>
+                <i class="pi pi-search p-text-secondary"></i>
+                <span>Find item</span>
+            </button>
+        </a>
+        <a href="/uikit/list" *ngIf="isClient">
+            <button class="p-link layout-topbar-button">
+                <i class="pi pi-shopping-cart p-text-secondary"></i>
+                <span *ngIf="getSelectedProductsCount() !== '0'" class="custom-badge">
+                    {{ getSelectedProductsCount() }}
+                </span>
                 <span>Profile</span>
             </button>
         </a>

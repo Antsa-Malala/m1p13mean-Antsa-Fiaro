@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://m1p13mean-fiaro-antsa.onrender.com'
+  //apiUrl: 'https://m1p13mean-fiaro-antsa.onrender.com'
+  apiUrl: 'http://localhost:5000'
 };
 
 /*

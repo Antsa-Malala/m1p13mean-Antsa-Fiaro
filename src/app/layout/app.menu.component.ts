@@ -25,6 +25,12 @@ export class AppMenuComponent implements OnInit {
         const manageItems = [
             { label: 'Products', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/pages/crud'] }
         ];
+        
+        if (role === 'SHOP') {
+            manageItems.push(
+                { label: 'Restock', icon: 'pi pi-fw pi-box', routerLink: ['/purchase'] }
+            );
+        } 
 
         if (role === 'ADMIN') {
             manageItems.push(

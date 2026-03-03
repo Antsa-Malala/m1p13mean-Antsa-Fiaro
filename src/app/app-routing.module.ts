@@ -21,6 +21,8 @@ import { MydashboardComponent } from './demo/components/mydashboard/mydashboard.
                     { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
                     // New Update Template
                     { path: 'mydashboard', component: MydashboardComponent },
+                    { path: 'purchase', loadChildren: () => import('./demo/components/purchase/purchase.module').then(m => m.PurchaseModule) },
+                    { path: 'sale', loadChildren: () => import('./demo/components/sale/sale.module').then(m => m.SaleModule) },
                 ],
             },
             { path: 'pages/notfound', component: NotfoundComponent },

@@ -21,14 +21,8 @@ export class AppTopBarComponent {
     constructor(public layoutService: LayoutService, private userService: UserService, private router : Router) { }
 
     ngOnInit() {
-        this.userService.loadUser();
-        this.user = this.userService.getConnectedUser();
-        this.userService.user$.subscribe(u => {
-            this.user = u;
-
-            if (this.isClient) {
-                this.closeMenuForClient();
-            }
+        this.userService.user$.subscribe(user => {
+            this.user = user;
         });
     }
     
@@ -42,21 +36,10 @@ export class AppTopBarComponent {
             SHOP: '/auth/loginShop',
             CUSTOMER: '/auth/login'
         };
-
         this.router.navigate([routes[role] || '/auth/login']);
     }
 
     get isClient(): boolean {
         return this.user?.role === 'CUSTOMER';
-    }
-
-    private closeMenuForClient() {
-        if (this.layoutService.isDesktop()) {
-            this.layoutService.state.staticMenuDesktopInactive = true;
-        }
-
-        this.layoutService.state.overlayMenuActive = false;
-        this.layoutService.state.staticMenuMobileActive = false;
-        this.layoutService.state.menuHoverActive = false;
     }
 }
